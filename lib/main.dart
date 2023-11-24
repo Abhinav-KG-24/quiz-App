@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/quiz_bank.dart';
+
+QuizBank quizBank = QuizBank();
 
 void main() {
   runApp(const Quizzy());
@@ -30,13 +33,7 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Widget> scoreKeeper = [];
-  List<String> questions = [
-    '1. An atom is the smallest particle.', //false
-    '2. Arachnophobia is the fear of bathing.', //false
-    '3. Boiling water is 100 degrees Celsius.', //true
-    '4. Butterflies taste things with their wings.', //false
-  ];
-  List<bool> answers = [false, false, true, false];
+
   int questionNumber = 0;
 
   @override
@@ -51,7 +48,7 @@ class _QuizPageState extends State<QuizPage> {
                 padding: const EdgeInsets.all(15.0),
                 child: Center(
                     child: Text(
-                  questions[questionNumber],
+                  quizBank.questionBank[questionNumber].questionText,
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Colors.white, fontSize: 25.0),
                 )))),
@@ -60,10 +57,12 @@ class _QuizPageState extends State<QuizPage> {
                 padding: const EdgeInsets.all(10.0),
                 child: TextButton(
                     onPressed: () {
-                      bool correctAnswer = answers[questionNumber];
+                      bool correctAnswer =
+                          quizBank.questionBank[questionNumber].questionAnswer;
 
                       setState(() {
-                        if (questionNumber <= questions.length - 1) {
+                        if (questionNumber <=
+                            quizBank.questionBank.length - 1) {
                           questionNumber += 1;
                           if (correctAnswer == true) {
                             scoreKeeper.add(const Icon(
@@ -89,10 +88,12 @@ class _QuizPageState extends State<QuizPage> {
                 padding: const EdgeInsets.all(10.0),
                 child: TextButton(
                     onPressed: () {
-                      bool correctAnswer = answers[questionNumber];
+                      bool correctAnswer =
+                          quizBank.questionBank[questionNumber].questionAnswer;
 
                       setState(() {
-                        if (questionNumber <= questions.length - 1) {
+                        if (questionNumber <=
+                            quizBank.questionBank.length - 1) {
                           questionNumber += 1;
                           if (correctAnswer == false) {
                             scoreKeeper.add(const Icon(
