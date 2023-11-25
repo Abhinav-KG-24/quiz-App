@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/quiz_bank.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 QuizBank quizBank = QuizBank();
 
@@ -34,7 +35,33 @@ class QuizPage extends StatefulWidget {
 class _QuizPageState extends State<QuizPage> {
   List<Widget> scoreKeeper = [];
 
-  int questionNumber = 0;
+  void checkAnswer(bool userSelectedAnswer) {
+    bool correctAnswer = quizBank.getAnswers();
+    quizBank.questionNumber();
+    setState(() {
+      if (quizBank.isfinished() == true) {
+        Alert(
+                context: context,
+                title: 'Finished',
+                desc: 'You are completed the quiz sucessfully')
+            .show();
+        quizBank.reset();
+        scoreKeeper = [];
+      } else {
+        if (userSelectedAnswer == correctAnswer) {
+          scoreKeeper.add(const Icon(
+            Icons.done,
+            color: Colors.green,
+          ));
+        } else {
+          scoreKeeper.add(const Icon(
+            Icons.clear,
+            color: Colors.red,
+          ));
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +75,7 @@ class _QuizPageState extends State<QuizPage> {
                 padding: const EdgeInsets.all(15.0),
                 child: Center(
                     child: Text(
-                  quizBank.questionBank[questionNumber].questionText,
+                  quizBank.getQuestionText(),
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Colors.white, fontSize: 25.0),
                 )))),
@@ -57,26 +84,7 @@ class _QuizPageState extends State<QuizPage> {
                 padding: const EdgeInsets.all(10.0),
                 child: TextButton(
                     onPressed: () {
-                      bool correctAnswer =
-                          quizBank.questionBank[questionNumber].questionAnswer;
-
-                      setState(() {
-                        if (questionNumber <=
-                            quizBank.questionBank.length - 1) {
-                          questionNumber += 1;
-                          if (correctAnswer == true) {
-                            scoreKeeper.add(const Icon(
-                              Icons.done,
-                              color: Colors.green,
-                            ));
-                          } else {
-                            scoreKeeper.add(const Icon(
-                              Icons.clear,
-                              color: Colors.red,
-                            ));
-                          }
-                        }
-                      });
+                      checkAnswer(true);
                     },
                     style: TextButton.styleFrom(backgroundColor: Colors.green),
                     child: const Text(
@@ -88,24 +96,20 @@ class _QuizPageState extends State<QuizPage> {
                 padding: const EdgeInsets.all(10.0),
                 child: TextButton(
                     onPressed: () {
-                      bool correctAnswer =
-                          quizBank.questionBank[questionNumber].questionAnswer;
+                      bool correctAnswer = quizBank.getAnswers();
+                      quizBank.questionNumber();
 
                       setState(() {
-                        if (questionNumber <=
-                            quizBank.questionBank.length - 1) {
-                          questionNumber += 1;
-                          if (correctAnswer == false) {
-                            scoreKeeper.add(const Icon(
-                              Icons.done,
-                              color: Colors.green,
-                            ));
-                          } else {
-                            scoreKeeper.add(const Icon(
-                              Icons.clear,
-                              color: Colors.red,
-                            ));
-                          }
+                        if (correctAnswer == false) {
+                          scoreKeeper.add(const Icon(
+                            Icons.done,
+                            color: Colors.green,
+                          ));
+                        } else {
+                          scoreKeeper.add(const Icon(
+                            Icons.clear,
+                            color: Colors.red,
+                          ));
                         }
                       });
                     },
